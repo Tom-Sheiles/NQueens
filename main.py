@@ -1,41 +1,42 @@
+from queue import *
+from collections import deque
 import time
-start = time.time()
 
-def solution():
+def create_Queue(start, n, startTime):
 
-    queen_placer(0)
+    nodeQueue = deque([start])
+    currentRow = 0
+    currentPower = n
+
+    while nodeQueue:
+        if currentRow == n:
+            break
+        currentNode = nodeQueue.popleft()
+        # check if node is goal state
+        nextRow = currentNode.copy()
+
+        for i in range(n):
+            nextRow[currentRow] = i
+            nodeQueue.append(nextRow.copy())
+            currentPower -= 1
+        if currentPower == 0:
+            currentRow += 1
+            currentPower = n ** (currentRow + 1)
     print("done")
 
 
-def queen_placer(currentRow):
+n = int(input("Enter n: "))
 
-    queens[currentRow] = 0
+if n > 8:
+    print("n is too high to be calculated using BFS")
+    exit()
 
-    for i in range(n):
-        if verify_position(queens, currentRow, i):
-            queens[currentRow] == i
-            queen_placer(currentRow + 1)
+startState = [-1] * n
 
-    finish_problem(queens)
-
-
-def verify_position(queens, currentRow, yPosition):
-    for i in range(currentRow):
-        if queens[i] == yPosition:
-            return False
-    return True
-
-def finish_problem(queens):
-    print(queens)
-
-
-n = int(input("Enter n size of board: "))
-
-queens = [-1] * n
-print(queens)
-
-solution()
+start = time.time()
+create_Queue(startState, n, start)
 end = time.time()
+
 executeTime = end - start
-print(executeTime)
+print("finished in: " + str(executeTime) + " seconds")
 
