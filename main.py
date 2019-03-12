@@ -2,6 +2,18 @@ from queue import *
 from collections import deque
 import time
 
+# TODO: finish this function and then add a print function to print the results
+def validate_position(position):
+
+    for i in range(n):
+        for j in range(1, n):
+            if position[i] == position[j]:
+                return
+            else:
+                solutions.append(position)
+
+
+
 def create_Queue(start, n, startTime):
 
     nodeQueue = deque([start])
@@ -12,7 +24,7 @@ def create_Queue(start, n, startTime):
         if currentRow == n:
             break
         currentNode = nodeQueue.popleft()
-        # check if node is goal state
+        validate_position(currentNode)
         nextRow = currentNode.copy()
 
         for i in range(n):
@@ -32,6 +44,7 @@ if n > 8:
     exit()
 
 startState = [-1] * n
+solutions = []
 
 start = time.time()
 create_Queue(startState, n, start)
@@ -39,4 +52,6 @@ end = time.time()
 
 executeTime = end - start
 print("finished in: " + str(executeTime) + " seconds")
+print("")
+print(solutions)
 
