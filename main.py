@@ -54,16 +54,22 @@ def create_QueueDFS(start, n):
 
     nodeList = [start]
     currentRow = 0
+    flag = 0
 
     while nodeList:
-        currentNode = nodeList.pop()
+
+        if currentRow >= n:
+            flag = 1
+
+        currentNode = nodeList.pop(0)
         validate_position(currentNode)
 
-        for i in range(n):
-            currentNode[i] = currentRow
-            nodeList.insert(0, currentNode.copy())
+        if flag == 0:
+            for i in range(n - 1, -1, -1):
+                currentNode[currentRow] = i
+                nodeList.insert(0, currentNode.copy())
 
-        currentRow += 1
+            currentRow += 1
 
 
 # TODO: finish print, not vital, and impliment DFS
@@ -103,3 +109,10 @@ print("")
 print("found " + str(solutionsAmount) + " Solutions")
 print(solutions)
 
+
+
+
+''' for i in range(n):
+           currentNode[i] = currentRow
+           nodeList.insert(0, currentNode.copy())
+       currentRow += 1'''
