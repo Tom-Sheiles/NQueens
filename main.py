@@ -3,8 +3,8 @@ from collections import deque
 import time
 
 
-# TODO: finish this function and then add a print function to print the results
 def validate_position(position):
+    global solutionsAmount
 
     for i in range(n):
         if position[i] == -1:
@@ -23,6 +23,7 @@ def validate_position(position):
                     return
 
     solutions.append(position.copy())
+    solutionsAmount += 1
 
 
 def create_Queue(start, n):
@@ -47,8 +48,11 @@ def create_Queue(start, n):
             if currentPower == 0:
                 currentRow += 1
                 currentPower = n ** (currentRow + 1)
-    print("done")
 
+# TODO: finish print, not vital, and impliment DFS
+def printSolutions():
+
+    pass
 
 n = int(input("Enter n: "))
 
@@ -56,15 +60,22 @@ if n > 8:
     print("n is too high to be calculated using BFS")
     exit()
 
+if n == 1:
+    print("Cannot provide an answer for N=1")
+
 startState = [0] * n
 solutions = []
+solutionsAmount = 0
 
 start = time.time()
 create_Queue(startState, n)
 end = time.time()
 
+printSolutions()
+
 executeTime = end - start
 print("finished in: " + str(executeTime) + " seconds")
 print("")
+print("found " + str(solutionsAmount) + " Solutions")
 print(solutions)
 
