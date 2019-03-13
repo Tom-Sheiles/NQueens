@@ -49,12 +49,16 @@ def create_Queue(start, n):
                 currentRow += 1
                 currentPower = n ** (currentRow + 1)
 
+
 # TODO: finish print, not vital, and impliment DFS
 def printSolutions():
 
     pass
 
+
 n = int(input("Enter n: "))
+alg = str(input("Enter the algorithm to be used BFS or DFS (B/D): "))
+
 
 if n > 8:
     print("n is too high to be calculated using BFS")
@@ -63,7 +67,7 @@ if n > 8:
 if n == 1:
     print("Cannot provide an answer for N=1")
 
-startState = [0] * n
+startState = [-1] * n
 solutions = []
 solutionsAmount = 0
 
