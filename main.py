@@ -26,7 +26,7 @@ def validate_position(position):
     solutionsAmount += 1
 
 
-def create_Queue(start, n):
+def create_QueueBFS(start, n):
 
     nodeQueue = deque([start])
     currentRow = 0
@@ -48,6 +48,22 @@ def create_Queue(start, n):
             if currentPower == 0:
                 currentRow += 1
                 currentPower = n ** (currentRow + 1)
+
+
+def create_QueueDFS(start, n):
+
+    nodeList = [start]
+    currentRow = 0
+
+    while nodeList:
+        currentNode = nodeList.pop()
+        validate_position(currentNode)
+
+        for i in range(n):
+            currentNode[i] = currentRow
+            nodeList.insert(0, currentNode.copy())
+
+        currentRow += 1
 
 
 # TODO: finish print, not vital, and impliment DFS
@@ -72,7 +88,11 @@ solutions = []
 solutionsAmount = 0
 
 start = time.time()
-create_Queue(startState, n)
+
+if alg == 'B':
+    create_QueueBFS(startState, n)
+else:
+    create_QueueDFS(startState, n)
 end = time.time()
 
 printSolutions()
