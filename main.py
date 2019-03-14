@@ -1,6 +1,7 @@
 from queue import *
 from collections import deque
 import time
+import sys
 
 
 def validate_position(position):
@@ -23,6 +24,7 @@ def validate_position(position):
                     return
 
     solutions.append(position.copy())
+    print(position)
     solutionsAmount += 1
 
 
@@ -71,12 +73,14 @@ def create_QueueDFS(start, n):
 
             currentRow += 1
         else:
-            for i in range(4):
+            for i in range(n):
                 currentNode = nodeList.pop(0)
                 validate_position(currentNode)
             flag = 0
-            currentRow = 3
-
+            currentRow = 0
+            for i in range(n):
+                if nodeList and nodeList[0][i] != -1:
+                    currentRow += 1
 
 # TODO: finish print, not vital, and impliment DFS
 def printSolutions():
@@ -88,12 +92,13 @@ n = int(input("Enter n: "))
 alg = str(input("Enter the algorithm to be used BFS or DFS (B/D): "))
 
 
-if n > 8:
+if n > 8 and alg == 'B':
     print("n is too high to be calculated using BFS")
     exit()
 
 if n == 1:
     print("Cannot provide an answer for N=1")
+    exit()
 
 startState = [-1] * n
 solutions = []
@@ -114,11 +119,3 @@ print("finished in: " + str(executeTime) + " seconds")
 print("")
 print("found " + str(solutionsAmount) + " Solutions")
 print(solutions)
-
-
-
-
-''' for i in range(n):
-           currentNode[i] = currentRow
-           nodeList.insert(0, currentNode.copy())
-       currentRow += 1'''
