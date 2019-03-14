@@ -50,40 +50,27 @@ def create_QueueBFS(start, n):
                 currentPower = n ** (currentRow + 1)
 
 
-def add_children(node):
-    row = 0
-    children = []
-
-    for i in node:
-        if node[i] != -1:
-            row += 1
-
-    for i in range(n - 1, -1, -1):
-        node[row] = i
-        children.insert(0, node.copy())
-
-    return children
-
-
 def create_QueueDFS(start, n):
 
     nodeList = [start]
+    currentRow = 0
     flag = 0
 
     while nodeList:
 
+        if currentRow >= n:
+            flag = 1
+
+        currentNode = nodeList.pop(0)
+        validate_position(currentNode)
+
         if flag == 0:
-            currentNode = nodeList.pop(0)
-            validate_position(currentNode)
-            current_children = add_children(currentNode)
-
-            if current_children:
-                nodeList.insert(0, zip(current_children))
-
             for i in range(n - 1, -1, -1):
-                pass
-                # currentNode[currentRow] = i
-                # nodeList.insert(0, currentNode.copy())
+                currentNode[currentRow] = i
+                nodeList.insert(0, currentNode.copy())
+
+            currentRow += 1
+
 
 # TODO: finish print, not vital, and impliment DFS
 def printSolutions():
