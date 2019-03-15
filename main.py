@@ -4,6 +4,7 @@ import time
 import sys
 
 
+# function used to verify if a passed in solution is a solution to the problem
 def validate_position(position):
     global solutionsAmount
 
@@ -28,6 +29,7 @@ def validate_position(position):
     solutionsAmount += 1
 
 
+# Function responsible for both the creation and traversal of the BFS graph
 def create_QueueBFS(start, n):
 
     nodeQueue = deque([start])
@@ -52,6 +54,7 @@ def create_QueueBFS(start, n):
                 currentPower = n ** (currentRow + 1)
 
 
+# Function responsible for the creation and traversal of the DFS graph
 def create_QueueDFS(start, n):
 
     nodeList = [start]
@@ -82,12 +85,8 @@ def create_QueueDFS(start, n):
                 if nodeList and nodeList[0][i] != -1:
                     currentRow += 1
 
-# TODO: finish print, not vital, and impliment DFS
-def printSolutions():
 
-    pass
-
-
+# User inputs to determine board size and algorithm type
 n = int(input("Enter n: "))
 alg = str(input("Enter the algorithm to be used BFS or DFS (B/D): "))
 
@@ -100,6 +99,9 @@ if n == 1:
     print("Cannot provide an answer for N=1")
     exit()
 
+# initialise a list that contains the start position of the board, where -1 represents an empty row
+# The board is visualized by a standard list where the row of the piece is shown by the location in the list and
+# the column of the list is shown by the value, this is done to save memory over a 2D array
 startState = [-1] * n
 solutions = []
 solutionsAmount = 0
@@ -111,8 +113,6 @@ if alg == 'B':
 else:
     create_QueueDFS(startState, n)
 end = time.time()
-
-printSolutions()
 
 executeTime = end - start
 print("finished in: " + str(executeTime) + " seconds")
