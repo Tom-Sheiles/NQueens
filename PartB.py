@@ -1,5 +1,6 @@
 import time
 import random
+import math
 
 
 def costCalculation(position):
@@ -58,6 +59,51 @@ def hill_climb(position):
     return solutions[chosen_value]
 
 
+def simulated_annealing(position, temperature, tempmin, decayrate):
+
+    permutations = []
+    possibleMoves = []
+    nextCosts = []
+    initialCost = costCalculation(position)
+
+    while temperature >= tempmin:
+
+        for i in range(n):
+            positionTemp = position.copy()
+            for j in range(n):
+                positionTemp[i] = j
+                permutations.append(positionTemp.copy())
+
+        for i in permutations:
+            if i not in possibleMoves:
+                possibleMoves.append(i)
+
+        permutations.clear()
+
+        for i in range(len(possibleMoves) - 1):
+            if possibleMoves[i] == position:
+                possibleMoves.remove(possibleMoves[i])
+            cost = costCalculation(possibleMoves[i])
+            nextCosts.append(cost)
+
+
+        for i in range(len(possibleMoves)):
+            if nextCosts[i] < initialCost:
+                initialCost = nextCosts[i]
+                position = possibleMoves[i]
+            else:
+                delta = nextCosts[i] - initialCost
+                probability = math.exp(-delta/temperature)
+                if probability > random.randint(0, 1):
+                    initialCost = nextCosts[i]
+                    position = possibleMoves[i]
+            if initialCost == 0:
+                return position
+            temperature *= decayrate
+        if temperature <= tempmin:
+            return position
+
+
 def solve(startState, n):
 
     h = costCalculation(startState)
@@ -68,16 +114,23 @@ def solve(startState, n):
         h = costCalculation(next_position)
     print(next_position)
 
+
 n = int(input("Enter n: "))
 alg = input("Enter algorithm to be used Hill climbing or annealing (H/A): ")
 
+initial = 1
 startState = [0] * n
-solutions = []
-
 start = time.time()
 
-solve(startState, n)
-
+if alg == 'H':
+    print("using Hill climbing")
+    solve(startState, n)
+else:
+    print("using Simulated Annealing")
+    while initial != 0:
+        startState = simulated_annealing(startState, 100, 0.01, 0.2)
+        initial = costCalculation(startState)
+    print(startState)
 
 end = time.time()
 executeTime = end - start
