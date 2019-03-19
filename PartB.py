@@ -1,6 +1,7 @@
 import time
 import random
 import math
+import sys
 
 
 def costCalculation(position):
@@ -114,6 +115,16 @@ def solve(startState, n):
         h = costCalculation(next_position)
     print(next_position)
 
+# TODO: work on this part
+def print_result(position):
+
+    for i in position:
+        for j in range(position[i]):
+            sys.stdout.write("* ")
+        sys.stdout.write("Q")
+        print("")
+
+
 
 n = int(input("Enter n: "))
 alg = input("Enter algorithm to be used Hill climbing or annealing (H/A): ")
@@ -135,3 +146,4 @@ else:
 end = time.time()
 executeTime = end - start
 print("Found solution in " + str(executeTime) + " Seconds")
+print_result(startState)
