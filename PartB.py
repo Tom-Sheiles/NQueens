@@ -2,6 +2,7 @@ import time
 import random
 import math
 import sys
+import numpy as np
 
 
 def costCalculation(position):
@@ -60,50 +61,52 @@ def hill_climb(position):
     return solutions[chosen_value]
 
 
-def simulated_annealing(position, temperature, tempmin, decayrate):
+def simulated_annealing(position, temperature, decayrate):
 
-    k = 10000
+    k = 1000
     permutations = []
     possibleMoves = []
-    initialCost = costCalculation(position)
+    initial_heuristic = costCalculation(position)
 
-    for current_iteration in range(k):
+    while temperature > 0:
 
-        for i in range(n):
-            positionTemp = position.copy()
-            for j in range(n):
-                positionTemp[i] = j
-                permutations.append(positionTemp.copy())
+        for current_iteration in range(k):
+            if possibleMoves:
+                possibleMoves.clear()
+            for i in range(n):
+                positionTemp = position.copy()
+                for j in range(n):
+                    positionTemp[i] = j
+                    permutations.append(positionTemp.copy())
 
-        for i in permutations:
-            if i not in possibleMoves:
-                possibleMoves.append(i)
+            for i in permutations:
+                if i not in possibleMoves:
+                    possibleMoves.append(i)
 
-        permutations.clear()
+            permutations.clear()
 
-        next_move = possibleMoves[random.randint(0, len(possibleMoves) - 1)]
-        print(next_move)
-        '''for i in range(len(possibleMoves) - 1):
-            if possibleMoves[i] == position:
-                possibleMoves.remove(possibleMoves[i])
-            cost = costCalculation(possibleMoves[i])
-            nextCosts.append(cost)'''
+            next_move = possibleMoves[random.randint(0, len(possibleMoves) - 1)]
 
-        for i in range(len(possibleMoves)):
-            if nextCosts[i] < initialCost:
-                initialCost = nextCosts[i]
-                position = possibleMoves[i]
-            else:
-                delta = nextCosts[i] - initialCost
-                probability = math.exp(-delta/temperature)
-                if probability > random.randint(0, 1):
-                    initialCost = nextCosts[i]
-                    position = possibleMoves[i]
-            if initialCost == 0:
+            next_heuristic = costCalculation(next_move)
+            initial_cost = (1 / (initial_heuristic + 1))
+            next_cost = (1 / (next_heuristic + 1))
+
+            if initial_heuristic == 0:
                 return position
-            temperature *= decayrate
-        if temperature <= tempmin:
-            return position
+
+            if next_cost < initial_cost:
+                position = next_move
+                initial_heuristic = next_heuristic
+            else:
+                delta = initial_heuristic - next_heuristic
+                probablity = math.exp(-(delta / temperature))
+                rnumb = random.uniform(0.0, 1.0)
+                if probablity > rnumb and probablity < 1:
+                    position = next_move
+                    initial_heuristic = next_heuristic
+
+        temperature *= decayrate
+    return position
 
 
 def solve(startState, n, alg):
@@ -112,17 +115,23 @@ def solve(startState, n, alg):
         h = costCalculation(startState)
         next_position = startState
 
+        start = time.time()
         while h > 0:
             next_position = hill_climb(next_position)
             h = costCalculation(next_position)
         print(next_position)
+        end = time.time()
+        print("finished in: " + str(end - start) + " seconds")
         return next_position
     else:
-        temperature = float(input("Enter starting temperature: "))
-        decay_rate = float(input("Enter temperature decay rate: "))
-        next_position = simulated_annealing(startState, temperature, 0, decay_rate)
+        temperature = float(input("Enter starting temperature (recommended 100,000,000): "))
+        decay_rate = float(input("Enter temperature decay rate (recommended 0.8 - 0.99): "))
+        start = time.time()
+        next_position = simulated_annealing(startState, temperature, decay_rate)
+        end = time.time()
+        print(next_position)
+        print("finished in: " + str(end - start) + " seconds")
         return next_position
-        #TODO: finish sim anneal here
 
 
 def print_result(position):
@@ -154,7 +163,7 @@ alg = input("Enter algorithm to be used Hill climbing or annealing (H/A): ")
 initial = 1
 startState = initial_board(n)
 print("Initial board: " + str(startState))
-start = time.time()
+
 
 if alg == 'H':
     print("using Hill climbing")
@@ -166,13 +175,4 @@ else:
     print("algorithm name not defined")
     exit()
 
-
-    '''while initial != 0:
-        startState = simulated_annealing(startState, 100, 0.01, 0.2)
-        initial = costCalculation(startState)
-    print(startState)'''
-
-end = time.time()
-executeTime = end - start
-print("Found solution in " + str(executeTime) + " Seconds")
 print_result(solution)
