@@ -62,12 +62,12 @@ def hill_climb(position):
 
 def simulated_annealing(position, temperature, tempmin, decayrate):
 
+    k = 10000
     permutations = []
     possibleMoves = []
-    nextCosts = []
     initialCost = costCalculation(position)
 
-    while temperature >= tempmin:
+    for current_iteration in range(k):
 
         for i in range(n):
             positionTemp = position.copy()
@@ -81,12 +81,13 @@ def simulated_annealing(position, temperature, tempmin, decayrate):
 
         permutations.clear()
 
-        for i in range(len(possibleMoves) - 1):
+        next_move = possibleMoves[random.randint(0, len(possibleMoves) - 1)]
+        print(next_move)
+        '''for i in range(len(possibleMoves) - 1):
             if possibleMoves[i] == position:
                 possibleMoves.remove(possibleMoves[i])
             cost = costCalculation(possibleMoves[i])
-            nextCosts.append(cost)
-
+            nextCosts.append(cost)'''
 
         for i in range(len(possibleMoves)):
             if nextCosts[i] < initialCost:
@@ -105,45 +106,73 @@ def simulated_annealing(position, temperature, tempmin, decayrate):
             return position
 
 
-def solve(startState, n):
+def solve(startState, n, alg):
 
-    h = costCalculation(startState)
-    next_position = startState
+    if alg == 'H':
+        h = costCalculation(startState)
+        next_position = startState
 
-    while h > 0:
-        next_position = hill_climb(next_position)
-        h = costCalculation(next_position)
-    print(next_position)
+        while h > 0:
+            next_position = hill_climb(next_position)
+            h = costCalculation(next_position)
+        print(next_position)
+        return next_position
+    else:
+        temperature = float(input("Enter starting temperature: "))
+        decay_rate = float(input("Enter temperature decay rate: "))
+        next_position = simulated_annealing(startState, temperature, 0, decay_rate)
+        return next_position
+        #TODO: finish sim anneal here
 
-# TODO: work on this part
+
 def print_result(position):
 
-    for i in position:
+    for i in range(len(position)):
         for j in range(position[i]):
             sys.stdout.write("* ")
-        sys.stdout.write("Q")
+        sys.stdout.write("Q ")
+        if position[i] == 0:
+            for l in range(n - 2):
+                sys.stdout.write("* ")
+        for k in range(j + 1, n - 1):
+            sys.stdout.write("* ")
         print("")
 
+
+def initial_board(n):
+
+    board = []
+    for i in range(n):
+        position = random.randint(0, n - 1)
+        board.append(position)
+    return board
 
 
 n = int(input("Enter n: "))
 alg = input("Enter algorithm to be used Hill climbing or annealing (H/A): ")
 
 initial = 1
-startState = [0] * n
+startState = initial_board(n)
+print("Initial board: " + str(startState))
 start = time.time()
 
 if alg == 'H':
     print("using Hill climbing")
-    solve(startState, n)
+    solution = solve(startState, n, alg)
+elif alg == 'A':
+    print("using Simulated Annealing \n")
+    solution = solve(startState, n, alg)
 else:
-    print("using Simulated Annealing")
-    while initial != 0:
+    print("algorithm name not defined")
+    exit()
+
+
+    '''while initial != 0:
         startState = simulated_annealing(startState, 100, 0.01, 0.2)
         initial = costCalculation(startState)
-    print(startState)
+    print(startState)'''
 
 end = time.time()
 executeTime = end - start
 print("Found solution in " + str(executeTime) + " Seconds")
-print_result(startState)
+print_result(solution)
