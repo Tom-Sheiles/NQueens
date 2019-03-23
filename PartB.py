@@ -61,9 +61,8 @@ def hill_climb(position):
     return solutions[chosen_value]
 
 
-def simulated_annealing(position, temperature, decayrate):
+def simulated_annealing(position, temperature, decayrate, k):
 
-    k = 1000
     permutations = []
     possibleMoves = []
     initial_heuristic = costCalculation(position)
@@ -126,8 +125,9 @@ def solve(startState, n, alg):
     else:
         temperature = float(input("Enter starting temperature (recommended 100,000,000): "))
         decay_rate = float(input("Enter temperature decay rate (recommended 0.8 - 0.99): "))
+        k = int(input("Enter the number of iterations until the temperature decreases (rec 10000): "))
         start = time.time()
-        next_position = simulated_annealing(startState, temperature, decay_rate)
+        next_position = simulated_annealing(startState, temperature, decay_rate, k)
         end = time.time()
         print(next_position)
         print("finished in: " + str(end - start) + " seconds")
