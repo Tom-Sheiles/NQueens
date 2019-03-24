@@ -123,9 +123,9 @@ def solve(startState, n, alg):
         print("finished in: " + str(end - start) + " seconds")
         return next_position
     else:
-        temperature = float(input("Enter starting temperature (recommended 100,000,000): "))
+        temperature = float(input("Enter starting temperature (recommended 100,000): "))
         decay_rate = float(input("Enter temperature decay rate (recommended 0.8 - 0.99): "))
-        k = int(input("Enter the number of iterations until the temperature decreases (rec 10000): "))
+        k = int(input("Enter the number of iterations until the temperature decreases (rec 10,000): "))
         start = time.time()
         next_position = simulated_annealing(startState, temperature, decay_rate, k)
         end = time.time()
